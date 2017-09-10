@@ -3,7 +3,7 @@
 import re, sys, os, getopt
 from random import sample
 
-ntickets = 14
+ntickets = 22
 nquestions = 4
 
 texheader='\\documentclass[12pt]{extarticle}\n'\
@@ -47,7 +47,13 @@ samples = []
 for i in xrange(nquestions):
   text=open('pr'+str(i+1)+'.tex',"r").read()
   texts[i]=findex.findall(text)
-  samples.append(sample(xrange(len(texts[i])),ntickets))
+  if ntickets > len(texts[i]):
+    s = []
+    for j in xrange(ntickets % len(texts[i]) + 1):
+      s += sample(xrange(len(texts[i])),len(texts[i]))
+    samples.append(s)
+  else:
+    samples.append(sample(xrange(len(texts[i])),ntickets))
 
 for i in xrange(ntickets):
     exercises = [texts[j][samples[j][i]] for j in xrange(nquestions)]
